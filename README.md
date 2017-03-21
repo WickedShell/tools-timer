@@ -3,7 +3,7 @@ tools-timer
 
 [![Build Status](https://semaphoreci.com/api/v1/wickedshell/tools-timer/branches/master/badge.svg)](https://semaphoreci.com/wickedshell/tools-timer)
 
-The tools-timer is a Java [Timer] and [TimerTask] wrapper for [Clojure].
+The tools-timer is a Java [Timer](https://docs.oracle.com/javase/7/docs/api/java/util/Timer.html) and [TimerTask](https://docs.oracle.com/javase/7/docs/api/java/util/TimerTask.html) wrapper for Clojure.
 
 Installation
 ============
