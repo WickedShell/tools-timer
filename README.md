@@ -1,18 +1,14 @@
-ruiyun.tools.timer
+tools-timer
 =========
 
-The ruiyun.tools.timer is a Java [Timer] and [TimerTask] wrapper for [Clojure].
+The tools-timer is a Java [Timer] and [TimerTask] wrapper for [Clojure].
 
 Installation
 ============
 
-Add the following to your **project.clj**:
+Add the following to your `project.clj`:
 
-    [ruiyun/tools.timer "1.0.1"]
-
-Then execute
-
-    lein deps
+    [wickedshell/tools.timer "1.0.3-SNAPSHOT"]
 
 Quick tutorial
 ==============
@@ -20,7 +16,7 @@ Quick tutorial
 You can simply start a period task in every 5 seconds immediately like this:
 
 ```clojure
-(use 'ruiyun.tools.timer)
+(use 'tools-timer.core)
 (run-task! #(println "Say hello every 5 seconds.") :period 5000)
 ```
 
@@ -55,14 +51,14 @@ Documentation
 
 For more detailed information on **ruiyun.tools.timer**, please refer to the  [documentation].
 
+
+Contributors
+============
+Forked from [ruiyun.tools.timer](https://github.com/Ruiyun/tools.timer), by [Ruiyun Wen](https://github.com/Ruiyun)
+
 License
 =======
 
 Copyright (C) 2012 Ruiyun Wen
 
 Distributed under the Eclipse Public License, the same as Clojure.
-
-[Timer]:                http://docs.oracle.com/javase/7/docs/api/java/util/Timer.html
-[TimerTask]:            http://docs.oracle.com/javase/7/docs/api/java/util/TimerTask.html
-[Clojure]:              http://clojure.org/
-[documentation]:        http://ruiyun.github.com/tools.timer/

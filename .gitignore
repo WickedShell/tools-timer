@@ -11,3 +11,5 @@
 *.iml
 /autodoc
 autodoc/**
+.lein-repl-history
+*.swp

@@ -1,4 +1,4 @@
-(ns ^{:doc "ruiyun.tools.timer is an easy to use Java Timer wrapper for clojure.
+(ns ^{:doc "tools-timer is an easy to use Java Timer wrapper for clojure.
             You can simply start a period task in every 5 seconds immediately like this:
               (run-task! #(println \"Say hello every 5 seconds.\") :period 5000)
             If you want delay the first run with 2 seconds:
@@ -18,7 +18,7 @@
               (cancel-task! my-task) ; to cancel only the single timer-task
               (cancel! my-timer) ; to cancel all the tasks of my-timer"
       :author "ruiyun"}
-  ruiyun.tools.timer
+  tools-timer.core
   (:import [java.util Timer TimerTask Date]))
 
 (defn timer
@@ -28,7 +28,9 @@
   ([^String name] (Timer. name)))
 
 (defn timer-task
-  "Create a new java.util.Timer object."
+  "Create a new TimerTask object.
+  Adding a task with a timer-task allows canceling the submitted task, without
+  canceling the entire timer that the task is being run upon."
   {:added "1.0.2"}
   [task & {:keys [on-exception]}]
   {:pre [(fn? task)
