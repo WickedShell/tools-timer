@@ -1,6 +1,8 @@
 tools-timer
 =========
 
+[![Build Status](https://semaphoreci.com/api/v1/wickedshell/tools-timer/branches/master/badge.svg)](https://semaphoreci.com/wickedshell/tools-timer)
+
 The tools-timer is a Java [Timer] and [TimerTask] wrapper for [Clojure].
 
 Installation
@@ -8,7 +10,7 @@ Installation
 
 Add the following to your `project.clj`:
 
-    [wickedshell/tools.timer "1.0.3-SNAPSHOT"]
+    [wickedshell/tools-timer "1.0.3-SNAPSHOT"]
 
 Quick tutorial
 ==============
@@ -16,7 +18,7 @@ Quick tutorial
 You can simply start a period task in every 5 seconds immediately like this:
 
 ```clojure
-(use 'tools-timer.core)
+(use 'tools-timer)
 (run-task! #(println "Say hello every 5 seconds.") :period 5000)
 ```
 

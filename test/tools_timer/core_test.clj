@@ -33,7 +33,6 @@
              (Thread/sleep 200)
              (is (realized? thread-name-1) "No arguments, expected to be a run on our existing timer")
              (is (realized? thread-name-2) "No arguments, expected to be a run on our existing timer")
-             (println "ran on " @thread-name-1 @thread-name-2)
              (is (= @thread-name-1 @thread-name-2 timer-name) "Run on different threads")
 
              )))
@@ -83,8 +82,7 @@
              (run-task! #(deliver run-date (new Date)) :at request-date)
              (Thread/sleep 400)
              (is (realized? run-date) "Task never ran")
-             (is (< (Math/abs (- (.getTime @run-date) (.getTime request-date))) 25) "Unable to run the task within a 25ms window")
-             )))
+             (is (< (Math/abs (- (.getTime ^Date @run-date) (.getTime request-date))) 20) "Unable to run the task within a 25ms window"))))
 
 (deftest task-cancel
   (testing "Creates and cancels multiple tasks on a single timer"

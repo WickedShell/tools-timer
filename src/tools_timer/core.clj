@@ -63,11 +63,12 @@
   Sometimes user task may cause exception, it's a good reason to use an exception handler:
     :on-exception <handle function with an exception argument>"
   {:added "1.0.0"}
-  [task & {:keys [^Timer by, ^Date at, ^long delay, ^long period, on-exception]}]
+  [task & {:keys [^Timer by, ^Date at, ^long delay, ^long period, on-exception]
+           :or {delay 0 by (timer)}}]
   {:pre [(or (instance? TimerTask task) (fn? task))
-         (or (nil? by) (instance? Timer by))
+         (instance? Timer by)
          (or (nil? at) (instance? Date at))
-         (or (nil? delay) (>= delay 0))
+         (>= delay 0)
          (or (nil? period) (pos? period))
          (or (nil? on-exception) (fn? on-exception))]
    :post [(instance? Timer %)]}
@@ -80,13 +81,15 @@
                         (task)
                         (catch Exception e
                           (on-exception e)))
-                      (task)))))
-        ^Timer timer (or by (timer))
-        ^long start-time (or at delay 0)]
-    (if (nil? period)
-      (.schedule timer ^TimerTask task start-time)
-      (.schedule timer ^TimerTask task start-time period))
-    timer))
+                      (task)))))]
+    (if at
+      (if (nil? period)
+        (.schedule ^Timer by ^TimerTask task ^Date at)
+        (.schedule ^Timer by ^TimerTask task ^Date at period))
+      (if (nil? period)
+        (.schedule ^Timer by ^TimerTask task delay)
+        (.schedule ^Timer by ^TimerTask task delay period)))
+    by))
 
 (defn cancel!
   "Terminates a timer, discarding any currently scheduled tasks."
