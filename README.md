@@ -5,6 +5,11 @@ tools-timer
 
 The tools-timer is a Java [Timer](https://docs.oracle.com/javase/7/docs/api/java/util/Timer.html) and [TimerTask](https://docs.oracle.com/javase/7/docs/api/java/util/TimerTask.html) wrapper for Clojure.
 
+API Warning
+=========
+
+The API is currently undergoing some tweaks to simplify the interface. These should be concluded with the 1.0.3 stable release.
+
 Installation
 ============
 
@@ -37,7 +42,7 @@ Use this if you want to execute a task at an absolute time：
 And, you can use the same timer in more than one tasks:
 
 ```clojure
-(def greeting-timer (timer "The timer for greeting"))
+(def greeting-timer (timer :name "The timer for greeting"))
 (run-task! #(println "Say hello after 2 seconds.") :delay 2000 :by greeting-timer)
 (run-task! #(println "Say hello every 5 seconds.") :period 5000 :by greeting-timer)
 ```

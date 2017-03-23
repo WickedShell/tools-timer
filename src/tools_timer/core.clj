@@ -6,7 +6,7 @@
             Use this if you want to execute a task at an absolute time:
               (run-task! #(println \"Say hello at 2013-01-01T00:00:00 in beijing.\") :at #inst \"2013-01-01T00:00:00+08:00\")
             And, you can use the same timer in more than one tasks:
-              (def greeting-timer (timer \"The timer for greeting\"))
+              (def greeting-timer (timer :name \"The timer for greeting\"))
               (run-task! #(println \"Say hello after 2 seconds.\") :dealy 2000 :by greeting-timer)
               (run-task! #(println \"Say hello every 5 seconds.\") :period 5000 :by greeting-timer)
             Finally, you can cancel a timer's tasks:
@@ -24,8 +24,10 @@
 (defn timer
   "Create a new java.util.Timer object."
   {:added "1.0.0"}
-  ([] (Timer.))
-  ([^String name] (Timer. name)))
+  [& {:keys [name ^boolean is-daemon] :or {is-daemon false}}]
+  (if name
+    (new Timer name is-daemon)
+    (new Timer is-daemon)))
 
 (defn timer-task
   "Create a new TimerTask object.
@@ -44,12 +46,6 @@
                  (on-exception e)))
              (task)))))
 
-(defn deamon-timer
-  "Create a new java.util.Timer object with deamon option."
-  {:added "1.0.0"}
-  ([] (Timer. true))
-  ([name] (Timer. name true)))
-
 (defn run-task!
   "Execute a timer task, then return the timer user passed or be auto created.
   Normally, User need set one of the two options:
@@ -58,7 +54,7 @@
   If set none of them, the task will launch immediately.
   Optional, user can set:
     :period <milliseconds>
-  If user want share a timer between tow or more tasks, he can set an exist timer:
+  To reuse a timer between two or more tasks, pass in an existing timer:
     :by <a timer>
   Sometimes user task may cause exception, it's a good reason to use an exception handler:
     :on-exception <handle function with an exception argument>"

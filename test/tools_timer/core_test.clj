@@ -7,7 +7,7 @@
   (testing "Fire a one shot run task, with and without delays"
            (let [run? (atom false)
                  timer-name "named-timer-test"
-                 named-timer (timer timer-name)
+                 named-timer (timer :name timer-name)
                  thread-name-1 (promise)
                  thread-name-2 (promise)]
              ; validate having timer objects
@@ -54,15 +54,19 @@
              (is @not-run? "Task didn't cancel")
              )))
 
-(deftest deamon-timer-test
-  (testing "Create and use a daemon timer"
-           (let [run? (atom false)
-                 test-timer (deamon-timer)]
-             (is (instance? Timer test-timer) "Failed to create a deamon timer")
-             (is (instance? Timer (deamon-timer "named")) "Failed to create a deamon timer")
-             (run-task! #(reset! run? true) :by test-timer)
+(deftest daemon-timer-test
+  (testing "Create and run daemon timers"
+           (let [daemon-is-daemon? (atom nil)
+                 non-daemon-is-daemon? (atom nil)
+                 daemon-timer (timer :is-daemon true)
+                 non-daemon-timer (timer :name "named")]
+             (is (instance? Timer daemon-timer))
+             (is (instance? Timer non-daemon-timer))
+             (run-task! #(reset! daemon-is-daemon? (.isDaemon(Thread/currentThread))) :by daemon-timer)
+             (run-task! #(reset! non-daemon-is-daemon? (.isDaemon(Thread/currentThread))) :by non-daemon-timer)
              (Thread/sleep 100)
-             (is @run? "Daemon timer never ran"))))
+             (is @daemon-is-daemon? "Failed to make a daemon timer")
+             (is (= @non-daemon-is-daemon? false) "Failed to make non daemon timer"))))
 
 (deftest periodic-test
   (testing "Run a periodic task and cancel it"
