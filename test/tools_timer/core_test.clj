@@ -101,3 +101,23 @@
              (Thread/sleep 350)
              (cancel-task! task-1)
              (is (= @run-count 5) "Failed to cancel enough tasks"))))
+
+(deftest timer-inputs
+  (testing "Validates the inputs to timer"
+           (is (thrown? AssertionError (timer :name :name)))
+           (is (thrown? AssertionError (timer :is-daemon :false)))))
+
+(deftest timer-task-inputs
+  (testing "Validates the pre/post conditions"
+           (is (thrown? AssertionError (timer-task nil)))
+           (is (thrown? AssertionError (timer-task #(println "test") :on-exception "fails")))))
+
+(deftest run-task-inputs
+  (testing "Validates the inputs to run-task!"
+           (is (thrown? AssertionError (run-task! nil)))
+           (is (thrown? AssertionError (run-task! #(println "test") :by :timer)))
+           (is (thrown? AssertionError (run-task! #(println "test") :at 11325)))
+           (is (thrown? AssertionError (run-task! #(println "test") :delay -1)))
+           (is (thrown? AssertionError (run-task! #(println "test") :delay :delay)))
+           (is (thrown? AssertionError (run-task! #(println "test") :period 0)))
+           (is (thrown? AssertionError (run-task! #(println "test") :period :period)))))

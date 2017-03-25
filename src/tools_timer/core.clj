@@ -25,6 +25,9 @@
   "Create a new java.util.Timer object."
   {:added "1.0.0"}
   [& {:keys [name ^boolean is-daemon] :or {is-daemon false}}]
+  {:pre [(or (nil? name) (instance? String name))
+         (instance? Boolean is-daemon)]
+   :post [(instance? Timer %)]}
   (if name
     (new Timer name is-daemon)
     (new Timer is-daemon)))
@@ -36,7 +39,8 @@
   {:added "1.0.2"}
   [task & {:keys [on-exception]}]
   {:pre [(fn? task)
-         (or (nil? on-exception) (fn? on-exception))]}
+         (or (nil? on-exception) (fn? on-exception))]
+  :post [(instance? TimerTask %)]}
   (proxy [TimerTask] []
          (run []
            (if on-exception
@@ -61,22 +65,21 @@
   {:added "1.0.0"}
   [task & {:keys [^Timer by, ^Date at, ^long delay, ^long period, on-exception]
            :or {delay 0 by (timer)}}]
-  {:pre [(or (instance? TimerTask task) (fn? task))
-         (instance? Timer by)
+  {:pre [(instance? Timer by)
          (or (nil? at) (instance? Date at))
-         (>= delay 0)
-         (or (nil? period) (pos? period))]
+         (or (nil? delay) (and (instance? Long delay) (>= delay 0)))
+         (or (nil? period) (and (instance? Long period) (pos? period)))]
    :post [(instance? Timer %)]}
   (let [timer-task (if (instance? TimerTask task)
                      task
                      (timer-task task :on-exception on-exception))]
     (if at
       (if (nil? period)
-        (.schedule ^Timer by ^TimerTask timer-task ^Date at)
-        (.schedule ^Timer by ^TimerTask timer-task ^Date at period))
+        (.schedule by ^TimerTask timer-task at)
+        (.schedule by ^TimerTask timer-task at period))
       (if (nil? period)
-        (.schedule ^Timer by ^TimerTask timer-task delay)
-        (.schedule ^Timer by ^TimerTask timer-task delay period)))
+        (.schedule by ^TimerTask timer-task delay)
+        (.schedule by ^TimerTask timer-task delay period)))
     by))
 
 (defn cancel!
