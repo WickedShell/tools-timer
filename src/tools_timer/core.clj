@@ -65,26 +65,18 @@
          (instance? Timer by)
          (or (nil? at) (instance? Date at))
          (>= delay 0)
-         (or (nil? period) (pos? period))
-         (or (nil? on-exception) (fn? on-exception))]
+         (or (nil? period) (pos? period))]
    :post [(instance? Timer %)]}
-  (let [task  (if (instance? TimerTask task)
-                task
-                (proxy [TimerTask] []
-                  (run []
-                    (if on-exception
-                      (try
-                        (task)
-                        (catch Exception e
-                          (on-exception e)))
-                      (task)))))]
+  (let [timer-task (if (instance? TimerTask task)
+                     task
+                     (timer-task task :on-exception on-exception))]
     (if at
       (if (nil? period)
-        (.schedule ^Timer by ^TimerTask task ^Date at)
-        (.schedule ^Timer by ^TimerTask task ^Date at period))
+        (.schedule ^Timer by ^TimerTask timer-task ^Date at)
+        (.schedule ^Timer by ^TimerTask timer-task ^Date at period))
       (if (nil? period)
-        (.schedule ^Timer by ^TimerTask task delay)
-        (.schedule ^Timer by ^TimerTask task delay period)))
+        (.schedule ^Timer by ^TimerTask timer-task delay)
+        (.schedule ^Timer by ^TimerTask timer-task delay period)))
     by))
 
 (defn cancel!
