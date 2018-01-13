@@ -63,24 +63,25 @@
   Sometimes user task may cause exception, it's a good reason to use an exception handler:
     :on-exception <handle function with an exception argument>"
   {:added "1.0.0"}
-  [task & {:keys [^Timer by, ^Date at, ^long delay, ^long period, on-exception]
-           :or {delay 0 by (timer)}}]
-  {:pre [(instance? Timer by)
+  [task & {:keys [by, ^Date at, ^long delay, ^long period, on-exception]
+           :or {delay 0}}]
+  {:pre [(or (nil? by) (instance? Timer by))
          (or (nil? at) (instance? Date at))
          (or (nil? delay) (and (instance? Long delay) (>= delay 0)))
          (or (nil? period) (and (instance? Long period) (pos? period)))]
    :post [(instance? Timer %)]}
   (let [timer-task (if (instance? TimerTask task)
                      task
-                     (timer-task task :on-exception on-exception))]
+                     (timer-task task :on-exception on-exception))
+        ^Timer target-timer (or by (timer))]
     (if at
       (if (nil? period)
-        (.schedule by ^TimerTask timer-task at)
-        (.schedule by ^TimerTask timer-task at period))
+        (.schedule target-timer ^TimerTask timer-task at)
+        (.schedule target-timer ^TimerTask timer-task at period))
       (if (nil? period)
-        (.schedule by ^TimerTask timer-task delay)
-        (.schedule by ^TimerTask timer-task delay period)))
-    by))
+        (.schedule target-timer ^TimerTask timer-task delay)
+        (.schedule target-timer ^TimerTask timer-task delay period)))
+    target-timer))
 
 (defn cancel!
   "Terminates a timer, discarding any currently scheduled tasks."
