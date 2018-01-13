@@ -43,12 +43,12 @@
   :post [(instance? TimerTask %)]}
   (proxy [TimerTask] []
          (run []
-           (if on-exception
-             (try
-               (task)
-               (catch Exception e
-                 (on-exception e)))
-             (task)))))
+           (try
+             (task)
+             (catch Exception e
+               (if on-exception
+                 (on-exception e)
+                 (throw e)))))))
 
 (defn run-task!
   "Execute a timer task, then return the timer user passed or be auto created.
