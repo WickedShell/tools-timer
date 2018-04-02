@@ -1,4 +1,4 @@
-(defproject tools-timer "1.0.4-SNAPSHOT"
+(defproject tools-timer "1.0.4"
   :description "An easy to use Java Timer wrapper for clojure."
   :lein-release {:deploy-via :clojars}
   :min-lein-version "2.0.0"
