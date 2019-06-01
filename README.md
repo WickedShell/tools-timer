@@ -15,7 +15,7 @@ Installation
 
 Add the following to your `project.clj`:
 
-    [wickedshell/tools-timer "1.0.3-SNAPSHOT"]
+    [tools-timer "1.0.4"]
 
 Quick tutorial
 ==============
@@ -23,7 +23,7 @@ Quick tutorial
 You can simply start a period task in every 5 seconds immediately like this:
 
 ```clojure
-(use 'tools-timer)
+(use 'tools-timer.core)
 (run-task! #(println "Say hello every 5 seconds.") :period 5000)
 ```
 
